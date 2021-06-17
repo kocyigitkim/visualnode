@@ -1,19 +1,45 @@
 import React, { Component } from 'react'
+import * as ANT from 'antd';
+import { Row, Col } from 'antd';
+
 import ReactFlow, { Background, Controls, MiniMap, ReactFlowProvider } from 'react-flow-renderer';
 import 'react-flow-renderer/dist/style.css';
 import '../react-flow-renderer-dark.css';
 
+function renderNodeLabel(title, desc) {
+    return <div>
+        <ANT.Typography.Title style={{color: 'lime'}} level={5}>{title}</ANT.Typography.Title>
+        <hr></hr>
+        <ANT.Typography.Text>{desc}</ANT.Typography.Text>
+        <hr></hr>
+        <div style={{ display: 'flex' }}>
+            <ANT.Typography.Text style={{ flex: 1 }}>I: 1</ANT.Typography.Text>
+            <ANT.Typography.Text style={{ flex: 1 }}>O: 1</ANT.Typography.Text>
+            <ANT.Typography.Text style={{ flex: 1 }}>R: 0ms</ANT.Typography.Text>
+        </div>
+    </div>
+}
 export default class FlowEditor extends Component {
     state = {
         selectedNodes: [],
-        nodes: [{ id: '1', data: { label: 'Node 1' }, position: { x: 250, y: 100 } },
+        nodes: [{ id: '1', sourcePosition: 'left', targetPosition: 'right', data: { label: renderNodeLabel('GET /auth/index', "FastApi Router") }, position: { x: 100, y: 100 } },
         // you can also pass a React component as a label
-        { id: '2', data: { label: <div>Node 2</div> }, position: { x: 100, y: 200 } },
-        { id: 'e1-2', source: '1', target: '2', animated: false}]
+        { id: '2', sourcePosition: 'left', targetPosition: 'right', data: { label: renderNodeLabel('spGetUser', "Function") }, position: { x: 500, y: 100 } },
+        { id: 'e2-1', source: '2', target: '1', animated: true, type: 'smoothstep', label: "requestid" }]
     }
     constructor(props) {
         super(props);
         this.onSelectionChange = this.onSelectionChange.bind(this);
+        setTimeout((() => {
+            this.setState({
+                nodes: this.state.nodes.map(item => {
+                    if (item.id === "e2-1") {
+                        item.animated = false;
+                    }
+                    return item;
+                })
+            })
+        }).bind(this), 3000);
     }
     onSelectionChange(selectedNodes) {
         if (!selectedNodes) selectedNodes = [];
