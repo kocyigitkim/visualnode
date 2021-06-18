@@ -86,3 +86,9 @@ body{
     border-color: #474 !important;
     background-color: #242 !important;
 }
+.react-flow__edge-textbg{
+    fill: #000;
+}
+.react-flow__edge-text{
+    fill: white;
+}

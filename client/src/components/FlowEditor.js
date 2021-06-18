@@ -5,6 +5,7 @@ import { Row, Col } from 'antd';
 import ReactFlow, { Background, Controls, MiniMap, ReactFlowProvider } from 'react-flow-renderer';
 import 'react-flow-renderer/dist/style.css';
 import '../react-flow-renderer-dark.css';
+import FlowNode from './FlowNode';
 
 function renderNodeLabel(title, desc) {
     return <div>
@@ -22,10 +23,10 @@ function renderNodeLabel(title, desc) {
 export default class FlowEditor extends Component {
     state = {
         selectedNodes: [],
-        nodes: [{ id: '1', sourcePosition: 'left', targetPosition: 'right', data: { label: renderNodeLabel('GET /auth/index', "FastApi Router") }, position: { x: 100, y: 100 } },
+        nodes: [{ id: '1', type:'default', inputs: 1, outputs: 2, data: { label: renderNodeLabel('GET /auth/index', "FastApi Router") }, position: { x: 100, y: 100 } },
         // you can also pass a React component as a label
-        { id: '2', sourcePosition: 'left', targetPosition: 'right', data: { label: renderNodeLabel('spGetUser', "Function") }, position: { x: 500, y: 100 } },
-        { id: 'e2-1', source: '2', target: '1', animated: true, type: 'smoothstep', label: "requestid" }]
+        { id: '2', inputs: 3, outputs: 0, type:'default', data: { label: renderNodeLabel('spGetUser', "Function") }, position: { x: 500, y: 100 } },
+        { id: 'e2-1', source: '2', target: '1', sourceHandle: 'b', animated: true, type: 'smoothstep', label: "requestid" }]
     }
     constructor(props) {
         super(props);
@@ -52,7 +53,7 @@ export default class FlowEditor extends Component {
         return (
             <div style={{ flex: 1, height: '100%', borderTop: '5px solid rgba(255,255,255,0.1)', borderLeft: '5px solid rgba(255,255,255,0.1)' }}>
                 <ReactFlowProvider>
-                    <ReactFlow onSelectionChange={this.onSelectionChange} snapToGrid={true} snapGrid={[16, 16]} elements={this.state.nodes}>
+                    <ReactFlow nodeTypes={{default: FlowNode}} onSelectionChange={this.onSelectionChange} snapToGrid={true} snapGrid={[16, 16]} elements={this.state.nodes}>
                         <MiniMap
 
                             nodeStrokeColor={(n) => {
